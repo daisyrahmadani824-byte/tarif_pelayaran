@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Informasi Tarif Pelayaran</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-container h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .login-container p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .error {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .demo-info {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .demo-info h4 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .demo-info p {
+            margin: 5px 0;
+            text-align: left;
+        }
+
+        .dashboard-container {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            font-size: 22px;
+        }
+
+        .navbar button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+
+        .navbar button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #f5f5f5;
+            padding: 20px;
+            float: left;
+            min-height: calc(100vh - 70px);
+            border-right: 2px solid #e0e0e0;
+        }
+
+        .sidebar button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: white;
+            color: #333;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .sidebar button:hover,
+        .sidebar button.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-section {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+        .form-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: #d32f2f;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-delete:hover {
+            background: #b71c1c;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+        }
+
+        table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #c8e6c9;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .alert-info {
+            background: #bbdefb;
+            color: #1565c0;
+            border-left: 4px solid #1565c0;
+        }
+
+        .user-info {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .user-info strong {
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                float: none;
+                min-height: auto;
+                border-right: none;
+                border-bottom: 2px solid #e0e0e0;
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        .print-btn {
+            background: #4caf50;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .print-btn:hover {
+            background: #45a049;
+        }
+
+        @media print {
+            .navbar, .sidebar, .btn-submit, .print-btn, .btn-delete {
+                display: none;
+            }
+            .content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginContainer">
+        <h1>🚢 Sistem Informasi Tarif Pelayaran</h1>
+        <p>Silahkan login untuk melanjutkan</p>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Masukkan username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Masukkan password" required>
+            </div>
+            <button type="submit">Login</button>
+            <div class="error" id="loginError"></div>
+        </form>
+        <div class="demo-info">
+            <h4>📋 Demo Akun (Untuk Testing):</h4>
+            <p><strong>Admin:</strong></p>
+            <p>Username: admin</p>
+            <p>Password: admin123</p>
+            <p style="margin-top: 10px;"><strong>User:</strong></p>
+            <p>Username: user</p>
+            <p>Password: user123</p>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard-container" id="dashboardContainer">
+        <div class="navbar">
+            <h2>🚢 Sistem Informasi Tarif Pelayaran</h2>
+            <div>
+                <span id="userDisplay" style="margin-right: 20px;"></span>
+                <button onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <button class="menu-btn active" onclick="showSection('dashboard')">📊 Dashboard</button>
+            <button class="menu-btn" onclick="showSection('rute')">🗺️ Data Rute</button>
+            <button class="menu-btn" onclick="showSection('tarif')">💰 Data Tarif</button>
+            <button class="menu-btn" onclick="showSection('kapal')">⛴️ Data Kapal</button>
+            <button class="menu-btn" onclick="showSection('jadwal')">📅 Jadwal Pelayaran</button>
+            <button class="menu-btn" onclick="showSection('laporan')">📈 Laporan</button>
+        </div>
+
+        <div class="content">
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="section active">
+                <h2>📊 Dashboard</h2>
+                <div class="user-info">
+                    <strong>Pengguna:</strong> <span id="dashboardUser"></span><br>
+                    <strong>Role:</strong> <span id="dashboardRole"></span><br>
+                    <strong>Tanggal Login:</strong> <span id="dashboardDate"></span>
+                </div>
+                <div class="alert alert-info">
+                    <strong>Selamat datang!</strong> Sistem Informasi Tarif Pelayaran membantu Anda mengelola data rute, tarif, kapal, dan jadwal pelayaran dengan mudah.
+                </div>
+                <h3 style="margin-top: 30px; color: #333;">Statistik Sistem</h3>
+                <table>
+                    <tr>
+                        <th>Kategori</th>
+                        <th>Jumlah</th>
+                    </tr>
+                    <tr>
+                        <td>Total Rute</td>
+                        <td id="totalRute">0</td>
+                    </tr>
+                    <tr>
+                        <td>Total Tarif</td>
+                        <td id="totalTarif">0</td>
+                    </tr>
+                    <tr>
+                        <td>Total Kapal</td>
+                        <td id="totalKapal">0</td>
+                    </tr>
+                    <tr>
+                        <td>Total Jadwal</td>
+                        <td id="totalJadwal">0</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- Data Rute Section -->
+            <div id="rute" class="section">
+                <h2>🗺️ Data Rute Pelayaran</h2>
+                <div class="form-section">
+                    <h3>Tambah Rute Baru</h3>
+                    <form id="ruteForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Kota Asal</label>
+                                <input type="text" id="ruteAsal" placeholder="Contoh: Jakarta" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Kota Tujuan</label>
+                                <input type="text" id="ruteTujuan" placeholder="Contoh: Surabaya" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Jarak (KM)</label>
+                                <input type="number" id="ruteJarak" placeholder="Contoh: 500" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Durasi (Jam)</label>
+                                <input type="number" id="ruteDurasi" placeholder="Contoh: 24" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-submit">Tambah Rute</button>
+                    </form>
+                </div>
+                <h3>Daftar Rute</h3>
+                <table id="ruteTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Asal</th>
+                            <th>Tujuan</th>
+                            <th>Jarak (KM)</th>
+                            <th>Durasi (Jam)</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ruteTbody"></tbody>
+                </table>
+            </div>
+
+            <!-- Data Tarif Section -->
+            <div id="tarif" class="section">
+                <h2>💰 Data Tarif</h2>
+                <div class="form-section">
+                    <h3>Tambah Tarif Baru</h3>
+                    <form id="tarifForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Rute</label>
+                                <select id="tarifRute" required>
+                                    <option value="">-- Pilih Rute --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Kelas Penumpang</label>
+                                <select id="tarifKelas" required>
+                                    <option value="">-- Pilih Kelas --</option>
+                                    <option value="Ekonomi">Ekonomi</option>
+                                    <option value="Bisnis">Bisnis</option>
+                                    <option value="Premium">Premium</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Harga (Rp)</label>
+                                <input type="number" id="tarifHarga" placeholder="Contoh: 250000" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Kapasitas Penumpang</label>
+                                <input type="number" id="tarifKapasitas" placeholder="Contoh: 100" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-submit">Tambah Tarif</button>
+                    </form>
+                </div>
+                <h3>Daftar Tarif</h3>
+                <table id="tarifTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Rute</th>
+                            <th>Kelas</th>
+                            <th>Harga (Rp)</th>
+                            <th>Kapasitas</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tarifTbody"></tbody>
+                </table>
+            </div>
+
+            <!-- Data Kapal Section -->
+            <div id="kapal" class="section">
+                <h2>⛴️ Data Kapal</h2>
+                <div class="form-section">
+                    <h3>Tambah Kapal Baru</h3>
+                    <form id="kapalForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nama Kapal</label>
+                                <input type="text" id="kapalNama" placeholder="Contoh: KM Nusantara" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Nomor IMO</label>
+                                <input type="text" id="kapalIMO" placeholder="Contoh: 123456789" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Kapasitas Penumpang</label>
+                                <input type="number" id="kapalKapasitas" placeholder="Contoh: 500" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Tahun Pembuatan</label>
+                                <input type="number" id="kapalTahun" placeholder="Contoh: 2015" required>
+                            </div>
+                        </div>
+                        <div class="form-row full">
+                            <div class="form-group">
+                                <label>Keterangan</label>
+                                <textarea id="kapalKeterangan" placeholder="Keterangan tambahan kapal"></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-submit">Tambah Kapal</button>
+                    </form>
+                </div>
+                <h3>Daftar Kapal</h3>
+                <table id="kapalTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Kapal</th>
+                            <th>IMO</th>
+                            <th>Kapasitas</th>
+                            <th>Tahun</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="kapalTbody"></tbody>
+                </table>
+            </div>
+
+            <!-- Jadwal Pelayaran Section -->
+            <div id="jadwal" class="section">
+                <h2>📅 Jadwal Pelayaran</h2>
+                <div class="form-section">
+                    <h3>Tambah Jadwal Baru</h3>
+                    <form id="jadwalForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Kapal</label>
+                                <select id="jadwalKapal" required>
+                                    <option value="">-- Pilih Kapal --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Rute</label>
+                                <select id="jadwalRute" required>
+                                    <option value="">-- Pilih Rute --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Tanggal Berangkat</label>
+                                <input type="datetime-local" id="jadwalBerangkat" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select id="jadwalStatus" required>
+                                    <option value="">-- Pilih Status --</option>
+                                    <option value="Direncanakan">Direncanakan</option>
+                                    <option value="Berlayar">Berlayar</option>
+                                    <option value="Tiba">Tiba</option>
+                                    <option value="Dibatalkan">Dibatalkan</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-submit">Tambah Jadwal</button>
+                    </form>
+                </div>
+                <h3>Daftar Jadwal</h3>
+                <table id="jadwalTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Kapal</th>
+                            <th>Rute</th>
+                            <th>Berangkat</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jadwalTbody"></tbody>
+                </table>
+            </div>
+
+            <!-- Laporan Section -->
+            <div id="laporan" class="section">
+                <h2>📈 Laporan</h2>
+                <button class="print-btn" onclick="window.print()">🖨️ Cetak Laporan</button>
+                <h3 style="margin-top: 20px;">Ringkasan Data</h3>
+                <table>
+                    <tr>
+                        <td colspan="2" style="background: #667eea; color: white; font-weight: bold;">RINGKASAN DATA SISTEM</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Rute Aktif</strong></td>
+                        <td id="laporanRute">0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Tarif Tersedia</strong></td>
+                        <td id="laporanTarif">0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Kapal Operasional</strong></td>
+                        <td id="laporanKapal">0</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Jadwal Pelayaran</strong></td>
+                        <td id="laporanJadwal">0</td>
+                    </tr>
+                </table>
+
+                <h3 style="margin-top: 30px;">Data Rute per Tanggal Laporan</h3>
+                <table id="laporanRuteTable">
+                    <thead>
+                        <tr>
+                            <th>Asal</th>
+                            <th>Tujuan</th>
+                            <th>Jarak</th>
+                            <th>Durasi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="laporanRuteTbody"></tbody>
+                </table>
+
+                <h3 style="margin-top: 30px;">Data Tarif per Tanggal Laporan</h3>
+                <table id="laporanTarifTable">
+                    <thead>
+                        <tr>
+                            <th>Rute</th>
+                            <th>Kelas</th>
+                            <th>Harga</th>
+                            <th>Kapasitas</th>
+                        </tr>
+                    </thead>
+                    <tbody id="laporanTarifTbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Local Storage untuk data
+        const users = {
+            admin: { password: 'admin123', role: 'Admin', canEdit: true },
+            user: { password: 'user123', role: 'User', canEdit: false }
+        };
+
+        let currentUser = null;
+        let rute = JSON.parse(localStorage.getItem('rute')) || [];
+        let tarif = JSON.parse(localStorage.getItem('tarif')) || [];
+        let kapal = JSON.parse(localStorage.getItem('kapal')) || [];
+        let jadwal = JSON.parse(localStorage.getItem('jadwal')) || [];
+
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (users[username] && users[username].password === password) {
+                currentUser = {
+                    username: username,
+                    role: users[username].role,
+                    canEdit: users[username].canEdit
+                };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                showDashboard();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('loginError').textContent = 'Username atau password salah!';
+            }
+        });
+
+        function showDashboard() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'block';
+            document.getElementById('userDisplay').textContent = `👤 ${currentUser.username} (${currentUser.role})`;
+            document.getElementById('dashboardUser').textContent = currentUser.username;
+            document.getElementById('dashboardRole').textContent = currentUser.role;
+            document.getElementById('dashboardDate').textContent = new Date().toLocaleDateString('id-ID');
+
+            // Update statistik
+            updateStatistik();
+
+            // Load data from localStorage
+            loadAllData();
+
+            // Disable forms for non-admin users
+            if (!currentUser.canEdit) {
+                disableEditingForUser();
+            }
+        }
+
+        function disableEditingForUser() {
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                const inputs = form.querySelectorAll('input, select, textarea, button[type="submit"]');
+                inputs.forEach(input => {
+                    input.disabled = true;
+                });
+            });
+
+            const deleteBtns = document.querySelectorAll('.btn-delete');
+            deleteBtns.forEach(btn => btn.disabled = true);
+
+            const addAlert = document.createElement('div');
+            addAlert.className = 'alert alert-info';
+            addAlert.style.marginTop = '20px';
+            addAlert.innerHTML = '<strong>ℹ️ Akses Terbatas:</strong> Anda hanya dapat melihat data. Untuk menambah/mengedit data, silakan login dengan akun Admin.';
+            document.querySelector('.sidebar').insertAdjacentElement('afterend', addAlert);
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('dashboardContainer').style.display = 'none';
+            document.getElementById('loginForm').reset();
+        }
+
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+
+            const buttons = document.querySelectorAll('.menu-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (sectionId === 'laporan') {
+                updateLaporan();
+            }
+        }
+
+        function updateStatistik() {
+            document.getElementById('totalRute').textContent = rute.length;
+            document.getElementById('totalTarif').textContent = tarif.length;
+            document.getElementById('totalKapal').textContent = kapal.length;
+            document.getElementById('totalJadwal').textContent = jadwal.length;
+        }
+
+        // RUTE Functions
+        document.getElementById('ruteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!currentUser.canEdit) {
+                alert('Anda tidak memiliki izin untuk menambah data!');
+                return;
+            }
+
+            const newRute = {
+                id: Date.now(),
+                asal: document.getElementById('ruteAsal').value,
+                tujuan: document.getElementById('ruteTujuan').value,
+                jarak: document.getElementById('ruteJarak').value,
+                durasi: document.getElementById('ruteDurasi').value
+            };
+
+            rute.push(newRute);
+            localStorage.setItem('rute', JSON.stringify(rute));
+            this.reset();
+            loadRute();
+            updateStatistik();
+            updateTarifSelect();
+            updateJadwalSelect();
+            alert('Rute berhasil ditambahkan!');
+        });
+
+        function loadRute() {
+            const tbody = document.getElementById('ruteTbody');
+            tbody.innerHTML = '';
+            rute.forEach((r, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${r.asal}</td>
+                        <td>${r.tujuan}</td>
+                        <td>${r.jarak}</td>
+                        <td>${r.durasi}</td>
+                        <td>${currentUser.canEdit ? `<button class="btn-delete" onclick="deleteRute(${r.id})">Hapus</button>` : '-'}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteRute(id) {
+            if (!currentUser.canEdit) return;
+            if (confirm('Yakin ingin menghapus rute ini?')) {
+                rute = rute.filter(r => r.id !== id);
+                localStorage.setItem('rute', JSON.stringify(rute));
+                loadRute();
+                updateStatistik();
+                alert('Rute berhasil dihapus!');
+            }
+        }
+
+        // TARIF Functions
+        document.getElementById('tarifForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!currentUser.canEdit) {
+                alert('Anda tidak memiliki izin untuk menambah data!');
+                return;
+            }
+
+            const ruteId = document.getElementById('tarifRute').value;
+            const ruteSelected = rute.find(r => r.id == ruteId);
+
+            const newTarif = {
+                id: Date.now(),
+                ruteId: ruteId,
+                ruteName: ruteSelected ? `${ruteSelected.asal} - ${ruteSelected.tujuan}` : '',
+                kelas: document.getElementById('tarifKelas').value,
+                harga: document.getElementById('tarifHarga').value,
+                kapasitas: document.getElementById('tarifKapasitas').value
+            };
+
+            tarif.push(newTarif);
+            localStorage.setItem('tarif', JSON.stringify(tarif));
+            this.reset();
+            loadTarif();
+            updateStatistik();
+            alert('Tarif berhasil ditambahkan!');
+        });
+
+        function loadTarif() {
+            const tbody = document.getElementById('tarifTbody');
+            tbody.innerHTML = '';
+            tarif.forEach((t, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${t.ruteName}</td>
+                        <td>${t.kelas}</td>
+                        <td>Rp ${parseInt(t.harga).toLocaleString('id-ID')}</td>
+                        <td>${t.kapasitas}</td>
+                        <td>${currentUser.canEdit ? `<button class="btn-delete" onclick="deleteTarif(${t.id})">Hapus</button>` : '-'}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteTarif(id) {
+            if (!currentUser.canEdit) return;
+            if (confirm('Yakin ingin menghapus tarif ini?')) {
+                tarif = tarif.filter(t => t.id !== id);
+                localStorage.setItem('tarif', JSON.stringify(tarif));
+                loadTarif();
+                updateStatistik();
+                alert('Tarif berhasil dihapus!');
+            }
+        }
+
+        function updateTarifSelect() {
+            const select = document.getElementById('tarifRute');
+            select.innerHTML = '<option value="">-- Pilih Rute --</option>';
+            rute.forEach(r => {
+                select.innerHTML += `<option value="${r.id}">${r.asal} - ${r.tujuan}</option>`;
+            });
+        }
+
+        // KAPAL Functions
+        document.getElementById('kapalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!currentUser.canEdit) {
+                alert('Anda tidak memiliki izin untuk menambah data!');
+                return;
+            }
+
+            const newKapal = {
+                id: Date.now(),
+                nama: document.getElementById('kapalNama').value,
+                imo: document.getElementById('kapalIMO').value,
+                kapasitas: document.getElementById('kapalKapasitas').value,
+                tahun: document.getElementById('kapalTahun').value,
+                keterangan: document.getElementById('kapalKeterangan').value
+            };
+
+            kapal.push(newKapal);
+            localStorage.setItem('kapal', JSON.stringify(kapal));
+            this.reset();
+            loadKapal();
+            updateStatistik();
+            updateJadwalSelect();
+            alert('Kapal berhasil ditambahkan!');
+        });
+
+        function loadKapal() {
+            const tbody = document.getElementById('kapalTbody');
+            tbody.innerHTML = '';
+            kapal.forEach((k, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${k.nama}</td>
+                        <td>${k.imo}</td>
+                        <td>${k.kapasitas}</td>
+                        <td>${k.tahun}</td>
+                        <td>${currentUser.canEdit ? `<button class="btn-delete" onclick="deleteKapal(${k.id})">Hapus</button>` : '-'}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteKapal(id) {
+            if (!currentUser.canEdit) return;
+            if (confirm('Yakin ingin menghapus kapal ini?')) {
+                kapal = kapal.filter(k => k.id !== id);
+                localStorage.setItem('kapal', JSON.stringify(kapal));
+                loadKapal();
+                updateStatistik();
+                alert('Kapal berhasil dihapus!');
+            }
+        }
+
+        function updateJadwalSelect() {
+            const kapalSelect = document.getElementById('jadwalKapal');
+            const ruteSelect = document.getElementById('jadwalRute');
+
+            kapalSelect.innerHTML = '<option value="">-- Pilih Kapal --</option>';
+            ruteSelect.innerHTML = '<option value="">-- Pilih Rute --</option>';
+
+            kapal.forEach(k => {
+                kapalSelect.innerHTML += `<option value="${k.id}">${k.nama}</option>`;
+            });
+
+            rute.forEach(r => {
+                ruteSelect.innerHTML += `<option value="${r.id}">${r.asal} - ${r.tujuan}</option>`;
+            });
+        }
+
+        // JADWAL Functions
+        document.getElementById('jadwalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!currentUser.canEdit) {
+                alert('Anda tidak memiliki izin untuk menambah data!');
+                return;
+            }
+
+            const kapalId = document.getElementById('jadwalKapal').value;
+            const ruteId = document.getElementById('jadwalRute').value;
+            const kapalSelected = kapal.find(k => k.id == kapalId);
+            const ruteSelected = rute.find(r => r.id == ruteId);
+
+            const newJadwal = {
+                id: Date.now(),
+                kapalId: kapalId,
+                kapalName: kapalSelected ? kapalSelected.nama : '',
+                ruteId: ruteId,
+                ruteName: ruteSelected ? `${ruteSelected.asal} - ${ruteSelected.tujuan}` : '',
+                berangkat: document.getElementById('jadwalBerangkat').value,
+                status: document.getElementById('jadwalStatus').value
+            };
+
+            jadwal.push(newJadwal);
+            localStorage.setItem('jadwal', JSON.stringify(jadwal));
+            this.reset();
+            loadJadwal();
+            updateStatistik();
+            alert('Jadwal berhasil ditambahkan!');
+        });
+
+        function loadJadwal() {
+            const tbody = document.getElementById('jadwalTbody');
+            tbody.innerHTML = '';
+            jadwal.forEach((j, index) => {
+                const tanggal = new Date(j.berangkat).toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${j.kapalName}</td>
+                        <td>${j.ruteName}</td>
+                        <td>${tanggal}</td>
+                        <td><span style="padding: 5px 10px; border-radius: 3px; background: ${getStatusColor(j.status)}; color: white; font-size: 12px;">${j.status}</span></td>
+                        <td>${currentUser.canEdit ? `<button class="btn-delete" onclick="deleteJadwal(${j.id})">Hapus</button>` : '-'}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'Direncanakan': '#2196F3',
+                'Berlayar': '#FF9800',
+                'Tiba': '#4CAF50',
+                'Dibatalkan': '#F44336'
+            };
+            return colors[status] || '#9E9E9E';
+        }
+
+        function deleteJadwal(id) {
+            if (!currentUser.canEdit) return;
+            if (confirm('Yakin ingin menghapus jadwal ini?')) {
+                jadwal = jadwal.filter(j => j.id !== id);
+                localStorage.setItem('jadwal', JSON.stringify(jadwal));
+                loadJadwal();
+                updateStatistik();
+                alert('Jadwal berhasil dihapus!');
+            }
+        }
+
+        function loadAllData() {
+            loadRute();
+            loadTarif();
+            loadKapal();
+            loadJadwal();
+            updateTarifSelect();
+            updateJadwalSelect();
+        }
+
+        function updateLaporan() {
+            document.getElementById('laporanRute').textContent = rute.length;
+            document.getElementById('laporanTarif').textContent = tarif.length;
+            document.getElementById('laporanKapal').textContent = kapal.length;
+            document.getElementById('laporanJadwal').textContent = jadwal.length;
+
+            const laporanRuteTbody = document.getElementById('laporanRuteTbody');
+            laporanRuteTbody.innerHTML = '';
+            rute.forEach(r => {
+                laporanRuteTbody.innerHTML += `
+                    <tr>
+                        <td>${r.asal}</td>
+                        <td>${r.tujuan}</td>
+                        <td>${r.jarak} KM</td>
+                        <td>${r.durasi} Jam</td>
+                    </tr>
+                `;
+            });
+
+            const laporanTarifTbody = document.getElementById('laporanTarifTbody');
+            laporanTarifTbody.innerHTML = '';
+            tarif.forEach(t => {
+                laporanTarifTbody.innerHTML += `
+                    <tr>
+                        <td>${t.ruteName}</td>
+                        <td>${t.kelas}</td>
+                        <td>Rp ${parseInt(t.harga).toLocaleString('id-ID')}</td>
+                        <td>${t.kapasitas}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Check if user already logged in
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser) {
+            currentUser = JSON.parse(savedUser);
+            showDashboard();
+        }
+    </script>
+</body>
+</html>
